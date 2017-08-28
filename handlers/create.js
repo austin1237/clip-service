@@ -18,7 +18,7 @@ module.exports.create = (event, context, callback) => {
     return;
   }
 
-  const params = {
+  const clip = {
     TableName: process.env.DYNAMODB_TABLE,
     Item: {
       id: uuid.v1(),
@@ -28,20 +28,54 @@ module.exports.create = (event, context, callback) => {
     },
   };
 
-  // write the todo to the database
-  dynamoDb.put(params, (error) => {
-    // handle potential errors
-    if (error) {
-      console.log("db insert fucked up");
-      callback(new Error(`Couldnt create the clip ${JSON.stringify(error)}`));
-      return;
-    }
-
-    // create a response
+  addClipToDb(clip)
+  .then(() =>{
+    return publishToSns(clip)
+  }).then(() =>{
     const response = {
       statusCode: 200,
-      body: JSON.stringify(params.Item),
+      body: "clip added to db",
     };
-    callback(null, response);
+    return callback(null,response);
+  }).catch( (err) =>{
+    console.log("An error occured")
+    console.log(err)
+    errResponse.statusCode = 500
+    errResponse.body = "An error occured creating your clip";
+    return callback(null, errResponse);
   });
 };
+
+
+let publishToSns = (clip) =>{
+  var sns = new AWS.SNS();
+  var snsMessage = {
+      Message: "test test", 
+      Subject: "Test SNS From Lambda",
+      TopicArn: process.env.SNS_TOPIC
+  };
+  console.log("about to send sns")
+  return sns.publish(snsMessage);
+  
+}
+
+let addClipToDb = (clip) =>{
+  return new Promise( (resolve, reject) =>{
+    dynamoDb.put(clip, (error) => {
+      // handle potential errors
+      if (error) {
+        console.log("db insert fucked up");
+        return reject(error)
+      }
+  
+      // create a response
+      const response = {
+        statusCode: 200,
+        body: JSON.stringify(clip.Item),
+      };
+      
+      return resolve()
+    }); 
+  })
+
+}

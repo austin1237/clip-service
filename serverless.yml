@@ -7,6 +7,8 @@ provider:
   runtime: nodejs4.3
   environment:
     DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+    SNS_TOPIC: 
+      Ref: ClipSnsTopic
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -17,6 +19,12 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+    - Effect: 'Allow'
+      Action:
+        - "sns:Publish"
+      Resource:
+        - Ref: ClipSnsTopic
+
 
 functions:
   create:
@@ -26,6 +34,7 @@ functions:
           path: clips
           method: post
           cors: true
+
 
 resources:
   Resources:
@@ -45,3 +54,10 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: ${self:provider.environment.DYNAMODB_TABLE}
+  
+    ClipSnsTopic:
+      Type: "AWS::SNS::Topic"
+      Properties: 
+        DisplayName: "ClipSns"
+        TopicName: "ClipSns"
+
