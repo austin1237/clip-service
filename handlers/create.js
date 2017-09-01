@@ -31,7 +31,8 @@ module.exports.create = (event, context, callback) => {
   addClipToDb(clip)
   .then(() =>{
     return publishToSns(clip)
-  }).then(() =>{
+  }).then((data) =>{
+    console.log(data)
     const response = {
       statusCode: 200,
       body: "clip added to db",
@@ -49,13 +50,22 @@ module.exports.create = (event, context, callback) => {
 
 let publishToSns = (clip) =>{
   var sns = new AWS.SNS();
+  console.log("Arn is " + process.env.SNS_TOPIC)
   var snsMessage = {
-      Message: "test test", 
-      Subject: "Test SNS From Lambda",
+      Message: "test test",
       TopicArn: process.env.SNS_TOPIC
   };
   console.log("about to send sns")
-  return sns.publish(snsMessage);
+  return new Promise((resolve, reject) => {
+    sns.publish(snsMessage, function(err, data) {
+        if (err) {
+            return reject(err);
+        }
+        console.log('push sent');
+        return resolve(data);
+    });
+  });
+
   
 }
 
