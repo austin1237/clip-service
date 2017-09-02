@@ -18,7 +18,7 @@ module.exports.create = (event, context, callback) => {
     return;
   }
 
-  const clip = {
+  const newClip = {
     TableName: process.env.DYNAMODB_TABLE,
     Item: {
       id: uuid.v1(),
@@ -28,9 +28,9 @@ module.exports.create = (event, context, callback) => {
     },
   };
 
-  addClipToDb(clip)
-  .then(() =>{
-    return publishToSns(clip)
+  addClipToDb(newClip)
+  .then((addedClip) =>{
+    return publishToSns(addedClip)
   }).then((data) =>{
     console.log(data)
     const response = {
@@ -49,10 +49,9 @@ module.exports.create = (event, context, callback) => {
 
 
 let publishToSns = (clip) =>{
-  var sns = new AWS.SNS();
-  console.log("Arn is " + process.env.SNS_TOPIC)
-  var snsMessage = {
-      Message: "test test",
+  let sns = new AWS.SNS();
+  let snsMessage = {
+      Message: JSON.stringify(clip),
       TopicArn: process.env.SNS_TOPIC
   };
   console.log("about to send sns")
@@ -64,9 +63,7 @@ let publishToSns = (clip) =>{
         console.log('push sent');
         return resolve(data);
     });
-  });
-
-  
+  });  
 }
 
 let addClipToDb = (clip) =>{
@@ -84,7 +81,7 @@ let addClipToDb = (clip) =>{
         body: JSON.stringify(clip.Item),
       };
       
-      return resolve()
+      return resolve(clip.Item)
     }); 
   })
 

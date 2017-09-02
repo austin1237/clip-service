@@ -56,12 +56,11 @@ let deployServerless = (serviceDiscovery) => {
         });
 
         serverlessDeploy.on('exit', function (code) {
-            if (!err){
-                return resolve();
-            }else{
+            if (code !== 0){
+                console.log(`serverless deploy exited with code ${code.toString()}`);
                 return reject();
             }
-            console.log('child process exited with code ' + code.toString());
+            return resolve(); 
         });
     });
 }
