@@ -42,6 +42,7 @@ let deployServerless = (serviceDiscovery) => {
     let err = false;
     return new Promise((resolve, reject) => {
         let cliArgs =[
+            `-stage=${stage}`, 
             'deploy'
         ]
         serverlessDeploy = spawn('serverless', cliArgs);
@@ -57,8 +58,7 @@ let deployServerless = (serviceDiscovery) => {
 
         serverlessDeploy.on('exit', function (code) {
             if (code !== 0){
-                console.log(`serverless deploy exited with code ${code.toString()}`);
-                return reject();
+                return reject(`serverless deploy exited with code ${code.toString()}`);
             }
             return resolve(); 
         });
