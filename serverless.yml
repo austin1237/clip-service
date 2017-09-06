@@ -27,7 +27,7 @@ provider:
 
 functions:
   create:
-    handler: handlers/create.create
+    handler: handler.create
     events:
       - http:
           path: clips
