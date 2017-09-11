@@ -1,6 +1,6 @@
 const moment = require('moment');
 
-let validateClip = function(clip){
+let validateClip = (clip) =>{
     if (typeof clip.url !== 'string') {
         throw("clip url was not a string");
     }
@@ -9,11 +9,27 @@ let validateClip = function(clip){
         throw("clip streamer was not a string");
     }
 
-    mDate = moment(clip.createdAt);
+    const mDate = moment(clip.createdAt);
     if (!mDate.isValid()){
         throw("clip createAt was not a date");
     } 
 }
 
-exports.validateClip = validateClip
+let validateQuery = (query) =>{
+    if (!query) {
+        throw("query for clips is required")
+    }
+
+    if (!query.streamer){
+        throw("streamer is a required paramter in clip query")
+    }
+
+    if(typeof query.streamer !== 'string'){
+        throw("streamer must be a string in the query")
+    }
+
+}
+
+exports.validateQuery = validateQuery;
+exports.validateClip = validateClip;
 

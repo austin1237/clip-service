@@ -1,9 +1,9 @@
 
-const clipValidator = require('./validators/clipValidator.js');
-const clipProvider = require('./providers/clipProvider.js');
-const snsProvider = require('./providers/snsProvider.js');
+const clipValidator = require('../validators/clipValidator.js');
+const clipProvider = require('../providers/clipProvider.js');
+const snsProvider = require('../providers/snsProvider.js');
 
-module.exports.create = (event, context, callback) => {
+module.exports.post = (event, context, callback) => {
   const timestamp = new Date().getTime();
   const data = JSON.parse(event.body);
   const clip = data.clip

@@ -27,11 +27,18 @@ provider:
 
 functions:
   create:
-    handler: handler.create
+    handler: handlers/post.post
     events:
       - http:
           path: clips
           method: post
+          cors: true
+  get:
+    handler: handlers/get.get
+    events:
+      - http:
+          path: clips
+          method: get
           cors: true
 
 

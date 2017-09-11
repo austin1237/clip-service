@@ -23,4 +23,18 @@ let addClipToDb = (clip) =>{
     })
 }
 
+let getClipByStreamer = (query) =>{
+  return new Promise( (resolve, reject) =>{
+    dynamoDb.get(query, (error, clip) => {
+      // handle potential errors
+      if (error) {
+        console.log("db insert failed");
+        return reject(error)
+      }
+      return resolve(clip.Item)
+    }); 
+  })
+}
+
+exports.getClipByStreamer = getClipByStreamer;
 exports.addClipToDb = addClipToDb;
