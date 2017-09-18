@@ -1,6 +1,6 @@
 # clip-servcie
+[![CircleCI](https://circleci.com/gh/austin1237/clip-service.svg?style=svg)](https://circleci.com/gh/austin1237/clip-service)<br />
 A collection of lamdas that store info on video clips
-
 ## Prerequistes
 You must have the following installed/configured for this to work correctly<br />
 1. [Node v6.10 or greater](https://github.com/creationix/nvm)

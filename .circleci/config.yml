@@ -1,0 +1,35 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/clip-service
+    docker:
+      - image: circleci/node:6.10.3
+    steps:
+      - checkout
+      - run:
+          name: install mocha
+          command: 'sudo npm install mocha -g'
+      - run: 
+          name: install repo dependencies
+          command: 'sudo npm install '
+      - run:
+          name: run tests
+          command: 'cd ~/clip-service && mocha --recursive'
+      - run: 
+          name: install python
+          command: 'sudo apt-get update && sudo apt-get install -y python python-dev python-pip python-virtualenv' 
+      - run:
+          name: install awscli
+          command: 'sudo pip install awscli'
+      - run:
+          name: install serverless
+          command: 'sudo npm install serverless -g'
+
+      - deploy:
+          name: Serverless Deploy
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              node deploy --stage=prod > /dev/null
+            else
+              node deploy --stage=dev > /dev/null
+            fi
