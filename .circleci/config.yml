@@ -17,11 +17,11 @@ jobs:
           command: 'cd ~/clip-service && mocha --recursive'
       -run:
           name: install awscli
-          command: pip install awscli
+          command: 'pip install awscli'
       - run:
           name: install serverless
           command: 'sudo npm install serverless -g'
-          
+
       - deploy:
           name: Serverless Deploy
           command: |
