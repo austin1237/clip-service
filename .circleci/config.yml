@@ -15,7 +15,7 @@ jobs:
       - run:
           name: run tests
           command: 'cd ~/clip-service && mocha --recursive'
-      -run:
+      - run:
           name: install awscli
           command: 'pip install awscli'
       - run:
