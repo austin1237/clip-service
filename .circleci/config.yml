@@ -20,6 +20,8 @@ jobs:
           command: 'cd ~/clip-service && mocha --recursive'
       
       - deploy:
+          name: install awscli
+          command: pip install awscli
           name: Serverless Deploy
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
