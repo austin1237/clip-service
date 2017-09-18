@@ -17,7 +17,7 @@ jobs:
           command: 'cd ~/clip-service && mocha --recursive'
       - run: 
           name: install python
-          command: 'apt-get update && apt-get install -y python python-dev python-pip python-virtualenv' 
+          command: 'sudo apt-get update && apt-get install -y python python-dev python-pip python-virtualenv' 
       - run:
           name: install awscli
           command: 'pip install awscli'
